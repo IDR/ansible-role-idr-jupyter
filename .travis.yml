@@ -6,9 +6,13 @@ services:
 
 install:
   - pip install ansible docker 'molecule<1.22'
+  - mkdir roles
+  - ln -s ../ roles/ansible-role-idr-jupyter
 
 script:
-  - molecule test
+  - ansible-lint -v .
+  - ansible-galaxy install -p roles -r tests/requirements.yml
+  - ANSIBLE_ROLES_PATH=.. ansible-playbook -i localhost, playbook.yml --syntax-check
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

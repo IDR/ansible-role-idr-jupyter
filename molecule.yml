@@ -5,7 +5,7 @@ dependency:
 
 # Default driver
 driver:
-  name: docker
+  name: vagrant
 
 vagrant:
   platforms:
@@ -19,19 +19,6 @@ vagrant:
         cpus: 1
   instances:
     - name: idr-jupyter
-
-docker:
-  containers:
-  - name: idr-jupyter-docker
-    image: manics/centos-systemd-ip-docker
-    image_version: latest
-    privileged: True
-
-ansible:
-  host_vars:
-    idr-jupyter-docker:
-      # Use a dummy image for testing (otherwise Travis runs out of space)
-      idr_jupyter_notebook_image: busybox
 
 verifier:
   name: testinfra
