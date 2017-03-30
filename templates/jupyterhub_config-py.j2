@@ -77,7 +77,7 @@ c.JupyterHub.authenticator_class = "oauthenticator.GitHubOrgOAuthenticator"
 c.GitHubOAuthenticator.oauth_callback_url = "{{ idr_jupyter_urlbase }}{{ idr_jupyter_prefix }}/hub/oauth_callback"
 c.GitHubOAuthenticator.client_id = "{{ idr_jupyter_github_id }}"
 c.GitHubOAuthenticator.client_secret = "{{ idr_jupyter_github_secret }}"
-c.GitHubOrgOAuthenticator.organisation_whitelist = "{{ idr_jupyter_github_org }}"
+c.GitHubOrgOAuthenticator.github_organization_whitelist = "{{ idr_jupyter_github_orgs | to_json }}"
 {% else %}
 c.JupyterHub.authenticator_class = "{{ idr_jupyter_authenticator }}"
 {% endif %}

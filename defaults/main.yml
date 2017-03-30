@@ -47,6 +47,8 @@ idr_jupyter_users:
 idr_jupyter_admins:
 - root
 
+idr_jupyter_github_orgs: []
+
 idr_jupyter_urlbase: "http://localhost"
 idr_jupyter_prefix: "/jupyter"
 
