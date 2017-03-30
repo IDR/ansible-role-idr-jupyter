@@ -20,6 +20,8 @@
     src: jupyterhub_config-py.j2
     dest: /srv/jupyterhub/jupyterhub_config.py
   register: jupyterconfig
+  notify:
+  - restart jupyterhub
 
 - name: jupyterhub | pull images
   become: yes
