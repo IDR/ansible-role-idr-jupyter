@@ -22,16 +22,16 @@ vagrant:
 
 docker:
   containers:
-  - name: idr-jupyter
+  - name: idr-jupyter-docker
     image: manics/centos-systemd-ip-docker
     image_version: latest
     privileged: True
 
 ansible:
   host_vars:
-    idr-jupyter:
-      # Use a smaller notebook image for testing
-      idr_jupyter_notebook_image: "jupyter/minimal-notebook:latest"
+    idr-jupyter-docker:
+      # Use a dummy image for testing (otherwise Travis runs out of space)
+      idr_jupyter_notebook_image: busybox
 
 verifier:
   name: testinfra
