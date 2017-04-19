@@ -23,12 +23,9 @@
   template:
     src: jupyterhub-docker-swarm.j2
     dest: /etc/systemd/system/docker-jupyterhub.service
-  register: systemdjupyter
-
-- name: jupyterhub | reload systemd
-  become: yes
-  command: systemctl daemon-reload
-  when: systemdjupyter.changed
+  notify:
+  - reload systemd
+  - restart jupyterhub
 
 # Docker swarm may have started the service without telling systemd
 # so only restart if the config has changed or the service isn't
@@ -40,11 +37,11 @@
   register: docker_jupyter_service
   changed_when: "docker_jupyter_service.rc != 0"
   failed_when: "docker_jupyter_service.rc > 1"
+  notify:
+  - restart jupyterhub
 
-- name: jupyterhub | restart swarm
+- name: jupyterhub | ensure systemd swarm service disabled
   become: yes
   service:
     enabled: "no"
     name: docker-jupyterhub.service
-    state: restarted
-  when: (jupyterconfig.changed or docker_jupyter_service.changed)

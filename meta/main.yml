@@ -3,11 +3,15 @@ galaxy_info:
   description: Setup a JupyterHub server in Docker
   company: Open Microscopy Environment
   license: BSD
-  min_ansible_version: 2.1
+  min_ansible_version: 2.2
   platforms:
   - name: EL
     versions:
     - 7
   galaxy_tags: []
 
-dependencies: []
+dependencies:
+- name: openmicroscopy.docker
+  src: openmicroscopy.docker
+- name: openmicroscopy.docker-tools
+  src: openmicroscopy.docker-tools

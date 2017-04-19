@@ -73,10 +73,14 @@ c.Authenticator.admin_users = {{ idr_jupyter_admins | to_json }}
 {% if idr_jupyter_authenticator == 'system' %}
 # Use default authenticator
 {% elif idr_jupyter_authenticator == 'github' %}
-c.JupyterHub.authenticator_class = "oauthenticator.GitHubOAuthenticator"
+# TODO: Switch back to GitHubOAuthenticator
+c.JupyterHub.authenticator_class = "oauthenticator.GitHubOrgOAuthenticator"
 c.GitHubOAuthenticator.oauth_callback_url = "{{ idr_jupyter_urlbase }}{{ idr_jupyter_prefix }}/hub/oauth_callback"
 c.GitHubOAuthenticator.client_id = "{{ idr_jupyter_github_id }}"
 c.GitHubOAuthenticator.client_secret = "{{ idr_jupyter_github_secret }}"
+# https://github.com/jupyterhub/oauthenticator/pull/58 is ready
+#c.GitHubOAuthenticator.github_organization_whitelist = {{ idr_jupyter_github_orgs | to_json }}
+c.GitHubOrgOAuthenticator.github_organization_whitelist = {{ idr_jupyter_github_orgs | to_json }}
 {% else %}
 c.JupyterHub.authenticator_class = "{{ idr_jupyter_authenticator }}"
 {% endif %}

@@ -1,0 +1,12 @@
+---
+# Handlers for idr-jupyter
+
+- name: reload systemd
+  become: yes
+  command: systemctl daemon-reload
+
+- name: restart jupyterhub
+  become: yes
+  service:
+    name: docker-jupyterhub.service
+    state: restarted
