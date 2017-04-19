@@ -1,6 +1,6 @@
 galaxy_info:
   author: ome-devel@lists.openmicroscopy.org.uk
-  description: Setup a JupyterHub server in Docker
+  description: Setup a JupyterHub server (Docker notebooks)
   company: Open Microscopy Environment
   license: BSD
   min_ansible_version: 2.2
@@ -11,6 +11,8 @@ galaxy_info:
   galaxy_tags: []
 
 dependencies:
+- name: openmicroscopy.basedeps
+  src: openmicroscopy.basedeps
 - name: openmicroscopy.docker
   src: openmicroscopy.docker
 - name: openmicroscopy.docker-tools

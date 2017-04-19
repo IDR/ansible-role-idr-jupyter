@@ -1,27 +1,49 @@
 ---
-# tasks file for roles/docker-jupyterhub
+# tasks file for idr-jupyter
 
 - name: jupyterhub | check variables
   fail:
     msg: "Invalid value of idr_jupyter_authenticator: {{ idr_jupyter_authenticator }}"
   when: "idr_jupyter_authenticator not in ['system', 'github']"
 
-# This will be used to pass the config file into the server, and for the
-# server to store persistent state
-- name: jupyterhub | create jupyter working directory
+- name: jupyterhub | create jupyter directories
   become: yes
   file:
-    path: /srv/jupyterhub
+    path: "{{ item }}"
     state: directory
+  with_items:
+  - /etc/jupyterhub
+  - /var/jupyterhub
 
-- name: jupyterhub | copy jupyter configuration file
+- name: jupyterhub | install epel repo
   become: yes
-  template:
-    src: jupyterhub_config-py.j2
-    dest: /srv/jupyterhub/jupyterhub_config.py
-  register: jupyterconfig
-  notify:
-  - restart jupyterhub
+  yum:
+    name: epel-release
+    state: present
+
+- name: jupyterhub | install system dependencies
+  yum:
+    name:
+    - python34-pip
+    - nodejs
+    - npm
+    state: present
+
+- name: jupyterhub | install node packages
+  npm:
+    global: yes
+    name: configurable-http-proxy
+    state: present
+
+# TODO: update to the latest versions
+- name: jupyterhub | install python3 packages
+  pip:
+    executable: pip3
+    name:
+    - jupyterhub==0.6.1
+    - dockerspawner==0.7.0
+    - https://github.com/IDR/oauthenticator/archive/0.5.1-IDR1.zip
+    state: present
 
 - name: jupyterhub | pull images
   become: yes
@@ -30,11 +52,35 @@
     state: "present"
     force: "{{ idr_jupyter_pull_latest }}"
   with_items:
-  - "{{ idr_jupyter_hub_image }}"
   - "{{ idr_jupyter_notebook_image }}"
 
-- include: docker.yml
-  when: not idr_jupyter_docker_swarm
+- name: jupyterhub | create systemd service
+  become: yes
+  template:
+    src: systemd-system-jupyterhub-service.j2
+    dest: /etc/systemd/system/jupyterhub.service
+  notify:
+  - reload systemd
+  - restart jupyterhub
 
-- include: docker.yml
-  when: idr_jupyter_docker_swarm
+- name: jupyterhub | copy jupyter configuration file
+  become: yes
+  template:
+    src: jupyterhub_config-py.j2
+    dest: /etc/jupyterhub/jupyterhub_config.py
+  register: jupyterconfig
+  notify:
+  - restart jupyterhub
+
+- name: force systemd reload
+  meta: flush_handlers
+
+- name: jupyterhub | enable jupyterhub
+  become: yes
+  service:
+    enabled: "yes"
+    name: jupyterhub.service
+    state: started
+
+#- include: dockerswarm.yml
+#  when: idr_jupyter_docker_swarm

@@ -6,8 +6,8 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 
 def test_services_running_and_enabled(Service):
-    assert Service('docker-jupyterhub').is_running
-    assert Service('docker-jupyterhub').is_enabled
+    assert Service('jupyterhub').is_running
+    assert Service('jupyterhub').is_enabled
 
 
 @pytest.mark.parametrize("password,status", [

@@ -1,0 +1,19 @@
+[Unit]
+Description=IDR JupyterHub
+Requires=docker.service
+After=docker.service
+
+[Service]
+User=root
+#Restart=on-failure
+Restart=no
+RestartSec=10
+ExecStart=/usr/bin/jupyterhub \
+    --no-ssl \
+    --base-url={{ idr_jupyter_prefix }} \
+    -f /etc/jupyterhub/jupyterhub_config.py \
+    --log-level={{ idr_jupyter_hub_log_level }}
+WorkingDirectory=/var/jupyterhub
+
+[Install]
+WantedBy=multi-user.target
