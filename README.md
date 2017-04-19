@@ -8,6 +8,13 @@ Work in progress.
 This was moved from an IDR playbook so all vars still reference the IDR.
 
 
+Dependencies
+------------
+
+This role requires Docker to be installed.
+For instance, you can use the `openmicroscopy.docker` role.
+
+
 Role Variables
 --------------
 

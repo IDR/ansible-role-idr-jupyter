@@ -11,9 +11,5 @@ galaxy_info:
   galaxy_tags: []
 
 dependencies:
-- name: openmicroscopy.basedeps
-  src: openmicroscopy.basedeps
-- name: openmicroscopy.docker
-  src: openmicroscopy.docker
 - name: openmicroscopy.docker-tools
   src: openmicroscopy.docker-tools
