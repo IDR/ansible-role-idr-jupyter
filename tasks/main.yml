@@ -40,7 +40,7 @@
   pip:
     executable: pip3
     name:
-    - jupyterhub==0.6.1
+    - jupyterhub==0.7.2
     - dockerspawner==0.7.0
     - https://github.com/IDR/oauthenticator/archive/0.5.1-IDR1.zip
     state: present
