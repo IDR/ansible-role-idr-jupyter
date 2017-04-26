@@ -22,6 +22,7 @@
     state: present
 
 - name: jupyterhub | install system dependencies
+  become: yes
   yum:
     name:
     - python34-pip
@@ -30,6 +31,7 @@
     state: present
 
 - name: jupyterhub | install node packages
+  become: yes
   npm:
     global: yes
     name: configurable-http-proxy
@@ -37,6 +39,7 @@
 
 # TODO: update to the latest versions
 - name: jupyterhub | install python3 packages
+  become: yes
   pip:
     executable: pip3
     name:
