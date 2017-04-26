@@ -19,7 +19,7 @@ idr_jupyter_hub_extra_docker_args: ""
 idr_jupyter_hub_image: "imagedata/jupyterhub-githubauth:latest"
 # Docker Swarm requires a modified version of DockerSpawner:
 #idr_jupyter_hub_image: "manics/jupyterhub-githubauth:latest"
-idr_jupyter_notebook_image: "imagedata/jupyter-docker:latest"
+idr_jupyter_notebook_image: "manics/jupyter-docker:merge"
 
 idr_jupyter_hub_log_level: DEBUG
 
