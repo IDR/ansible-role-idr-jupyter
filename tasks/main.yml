@@ -66,11 +66,15 @@
   - reload systemd
   - restart jupyterhub
 
+# This may contain sensitive credentials
 - name: jupyterhub | copy jupyter configuration file
   become: yes
   template:
     src: jupyterhub_config-py.j2
     dest: /etc/jupyterhub/jupyterhub_config.py
+    owner: root
+    group: root
+    mode: "0600"
   register: jupyterconfig
   notify:
   - restart jupyterhub
