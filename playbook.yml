@@ -1,21 +1,34 @@
 ---
+# Prerequisites and setup for tests
 - hosts: all
+
   roles:
-  - role: ansible-role-idr-jupyter
-    idr_jupyter_ip: "{{ ansible_eth0.ipv4.address }}"
-    # `user` must exist in the jupyterhub Docker container
-    idr_jupyter_users: [user]
-    idr_jupyter_admins: [user]
-    idr_jupyter_notebook_volumes: "{ '/notebooks/{username}': '/notebooks' }"
-    idr_jupyter_hub_extra_docker_args: "-e USER_PASSWORD=ome"
+  - role: openmicroscopy.docker
 
   tasks:
+
+  - name: Create test user
+    user:
+      name: user
+      # Password: ome
+      password: "$6$xcS97v9SWnlbWHlj$L83305n2jGkW.qhW03J4XGusLgVcu7ghiYYljANQ3K.ddqGKhc8apBcEqChTdSnrSxxdGq240WZyls4dUhKId/"
+
   - name: Create notebook directory for user
     become: yes
     file:
       path: "/notebooks/user"
       owner: 1000
       state: directory
+
+- hosts: all
+
+  roles:
+  - role: ansible-role-idr-jupyter
+    idr_jupyter_ip: "{{ ansible_eth0.ipv4.address }}"
+    # `user` must exist
+    idr_jupyter_users: [user]
+    idr_jupyter_admins: [user]
+    idr_jupyter_notebook_volumes: "{ '/notebooks/{username}': '/notebooks' }"
 
   # Setup a port-forward to 8000 and you should be able to login as
   # user:user password:ome

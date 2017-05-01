@@ -1,9 +1,11 @@
 ---
-# defaults file for roles/idr-jupyter
+# defaults file for idr-jupyter
 
 idr_jupyter_docker_swarm: False
 idr_jupyter_service: omero-jupyter
 idr_jupyter_network: omero-jupyter-net
+
+idr_jupyter_basedir: /opt/jupyter
 
 # https://docs.docker.com/engine/admin/logging/overview/
 idr_jupyter_log_driver: journald

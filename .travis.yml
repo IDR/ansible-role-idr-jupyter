@@ -1,3 +1,4 @@
+---
 sudo: required
 language: python
 
@@ -5,14 +6,10 @@ services:
   - docker
 
 install:
-  - pip install ansible docker 'molecule<1.22'
-  - mkdir roles
-  - ln -s ../ roles/ansible-role-idr-jupyter
+  - pip install ome-ansible-molecule-dependencies
 
 script:
-  - ansible-lint -v .
-  - ansible-galaxy install -p roles -r tests/requirements.yml
-  - ANSIBLE_ROLES_PATH=.. ansible-playbook -i localhost, playbook.yml --syntax-check
+  - molecule test
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

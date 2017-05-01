@@ -5,7 +5,7 @@ dependency:
 
 # Default driver
 driver:
-  name: vagrant
+  name: docker
 
 vagrant:
   platforms:
@@ -18,7 +18,25 @@ vagrant:
         memory: 512
         cpus: 1
   instances:
-    - name: idr-jupyter
+    - name: jupyter
+
+docker:
+  containers:
+  - name: jupyter
+    image: openmicroscopy/centos-systemd-ip
+    image_version: latest
+    privileged: True
+    ansible_groups:
+    - docker-hosts
+
+ansible:
+  group_vars:
+    docker-hosts:
+      # This should allow docker-in-docker to work
+      docker_storage_driver: vfs
+      # Travis docker has limited space, so use a dummy image instead
+      # (this won't actually run)
+      idr_jupyter_notebook_image: busybox
 
 verifier:
   name: testinfra
