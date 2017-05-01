@@ -9,7 +9,3 @@ galaxy_info:
     versions:
     - 7
   galaxy_tags: []
-
-dependencies:
-- name: openmicroscopy.docker-tools
-  src: openmicroscopy.docker-tools

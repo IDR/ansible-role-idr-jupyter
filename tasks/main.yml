@@ -21,13 +21,18 @@
     name: epel-release
     state: present
 
+# There's a bug in the distro virtualenv package which prevents python3
+# virtualenvs being created
+
 - name: jupyterhub | install system dependencies
   become: yes
   yum:
     name:
-    - python34-pip
     - nodejs
     - npm
+    # Required by ansible docker_image
+    - python-docker-py
+    - python34
     state: present
 
 - name: jupyterhub | install node packages
@@ -37,16 +42,38 @@
     name: configurable-http-proxy
     state: present
 
-# TODO: update to the latest versions
-- name: jupyterhub | install python3 packages
+- name: jupyterhub | create base directory
+  become: yes
+  file:
+    path: "{{ idr_jupyter_basedir }}"
+    state: directory
+
+- name: jupyterhub | download updated virtualenv
+  become: yes
+  get_url:
+    checksum: "sha1:995ce0fa007210ac2f10258999d06813ecdd6eeb"
+    dest: "{{ idr_jupyter_basedir }}/virtualenv-15.1.0.tar.gz"
+    url: https://pypi.python.org/packages/d4/0c/9840c08189e030873387a73b90ada981885010dd9aea134d6de30cd24cb8/virtualenv-15.1.0.tar.gz
+
+- name: jupyterhub | extract updated virtualenv
+  become: yes
+  unarchive:
+    creates: "{{ idr_jupyter_basedir }}/virtualenv-15.1.0/virtualenv.py"
+    dest: "{{ idr_jupyter_basedir }}"
+    remote_src: True
+    src: "{{ idr_jupyter_basedir }}/virtualenv-15.1.0.tar.gz"
+
+- name: jupyterhub | install python3 packages in virtualenv
   become: yes
   pip:
-    executable: pip3
     name:
     - jupyterhub==0.7.2
     - dockerspawner==0.7.0
     - https://github.com/IDR/oauthenticator/archive/0.5.1-IDR1.zip
     state: present
+    virtualenv: "{{ idr_jupyter_basedir }}/venv"
+    virtualenv_command: "{{ idr_jupyter_basedir }}/virtualenv-15.1.0/virtualenv.py"
+    virtualenv_python: python3
 
 - name: jupyterhub | pull images
   become: yes

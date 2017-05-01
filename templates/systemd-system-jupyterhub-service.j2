@@ -8,7 +8,9 @@ User=root
 #Restart=on-failure
 Restart=no
 RestartSec=10
-ExecStart=/usr/bin/jupyterhub \
+Environment="PATH={{ idr_jupyter_basedir }}/venv/bin:/bin:/usr/bin"
+ExecStart={{ idr_jupyter_basedir }}/venv/bin/python3 \
+    {{ idr_jupyter_basedir }}/venv/bin/jupyterhub \
     --no-ssl \
     --base-url={{ idr_jupyter_prefix }} \
     -f /etc/jupyterhub/jupyterhub_config.py \
