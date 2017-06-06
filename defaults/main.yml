@@ -51,6 +51,10 @@ idr_jupyter_admins:
 
 idr_jupyter_github_orgs: []
 
+idr_jupyter_github_auth_table: {}
+# Example:
+# { 1.2.3.4: [testid, testsecret, http://example.org] }
+
 idr_jupyter_urlbase: "http://localhost"
 idr_jupyter_prefix: "/jupyter"
 
