@@ -69,7 +69,7 @@
     name:
     - jupyterhub==0.7.2
     - dockerspawner==0.7.0
-    - https://github.com/IDR/oauthenticator/archive/0.5.1-IDR1.zip
+    - https://github.com/IDR/oauthenticator/archive/0.5.1-IDR2.zip
     state: present
     virtualenv: "{{ idr_jupyter_basedir }}/venv"
     virtualenv_command: "{{ idr_jupyter_basedir }}/virtualenv-15.1.0/virtualenv.py"
