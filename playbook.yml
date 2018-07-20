@@ -7,16 +7,16 @@
 
   tasks:
 
-  - name: Create test user
-    user:
-      name: user
-      # Password: ome
-      password: "$6$xcS97v9SWnlbWHlj$L83305n2jGkW.qhW03J4XGusLgVcu7ghiYYljANQ3K.ddqGKhc8apBcEqChTdSnrSxxdGq240WZyls4dUhKId/"
+  - name: Install iproute
+    become: yes
+    yum:
+      name: iproute
+      state: present
 
-  - name: Create notebook directory for user
+  - name: Create notebook directory for users
     become: yes
     file:
-      path: "/notebooks/user"
+      path: /notebooks
       owner: 1000
       state: directory
 
@@ -25,10 +25,13 @@
   roles:
   - role: ansible-role-idr-jupyter
     idr_jupyter_ip: "{{ ansible_eth0.ipv4.address }}"
-    # `user` must exist
-    idr_jupyter_users: [user]
-    idr_jupyter_admins: [user]
-    idr_jupyter_notebook_volumes: "{ '/notebooks/{username}': '/notebooks' }"
+    idr_jupyter_notebook_volumes: "{ '/notebooks': '/notebooks' }"
+    idr_jupyter_authenticator: dummyauthenticator.DummyAuthenticator
+    idr_jupyter_cull_timeout: 300
+    idr_jupyter_additional_config:
+      DummyAuthenticator.password: ome
+    # Any username
+    idr_jupyter_users: []
 
-  # Setup a port-forward to 8000 and you should be able to login as
-  # user:user password:ome
+  # Setup a port-forward to 8000 and you should be able to login with
+  # any username, password:ome

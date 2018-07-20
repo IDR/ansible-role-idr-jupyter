@@ -23,7 +23,7 @@ vagrant:
 docker:
   containers:
   - name: jupyter
-    image: openmicroscopy/centos-systemd-ip
+    image: centos/systemd
     image_version: latest
     privileged: True
     ansible_groups:
@@ -34,9 +34,8 @@ ansible:
     docker-hosts:
       # This should allow docker-in-docker to work
       docker_storage_driver: vfs
-      # Travis docker has limited space, so use a dummy image instead
-      # (this won't actually run)
-      idr_jupyter_notebook_image: busybox
+      # Docker in docker bug with newer versions
+      docker_version: 17.09.1.ce-1.el7.centos
 
 verifier:
   name: testinfra
