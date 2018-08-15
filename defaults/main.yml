@@ -17,8 +17,12 @@ idr_jupyter_hub_log_level: DEBUG
 # http://jupyterhub.readthedocs.io/en/latest/getting-started.html#proxy-authentication-token
 #- idr_jupyter_proxy_token:
 
-# Cull idle Jupyter servers after this time (seconds)
-idr_jupyter_cull_timeout: 3600
+# Options for culling idle Jupyter servers
+idr_jupyter_cull_options:
+- --timeout=300
+- --max-age=86400
+#- --cull-users
+
 
 # In theory it should be possible to have container survive a restart of
 # the hub. In practice it seems to lead to permission problems.

@@ -27,11 +27,9 @@
     idr_jupyter_ip: "{{ ansible_eth0.ipv4.address }}"
     idr_jupyter_notebook_volumes: "{ '/notebooks': '/notebooks' }"
     idr_jupyter_authenticator: dummyauthenticator.DummyAuthenticator
-    idr_jupyter_cull_timeout: 300
     idr_jupyter_additional_config:
       DummyAuthenticator.password: ome
-    # Any username
-    idr_jupyter_users: []
+    idr_jupyter_users: [user]
 
   # Setup a port-forward to 8000 and you should be able to login with
   # any username, password:ome

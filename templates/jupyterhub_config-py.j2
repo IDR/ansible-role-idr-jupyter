@@ -18,7 +18,13 @@ c.JupyterHub.proxy_auth_token = "{{ idr_jupyter_proxy_token }}"
 c.JupyterHub.services = [{
     'name': 'cull-idle',
     'admin': True,
-    'command': ['python', '{{ idr_jupyter_basedir }}/cull_idle_servers.py', '--timeout=300']
+    'command': [
+        'python',
+        '{{ idr_jupyter_basedir }}/cull_idle_servers.py',
+{% for opt in idr_jupyter_cull_options %}
+        '{{ opt }}',
+{% endfor %}
+      ]
 }]
 
 ######################################################################
