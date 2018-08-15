@@ -18,15 +18,22 @@ For instance, you can use the `openmicroscopy.docker` role.
 Role Variables
 --------------
 
-See `defaults/main.yml` for defaults.
-All variables are optional.
-Some of the most useful ones are:
-- `idr_jupyter_hub_image`: The Jupyterhub docker image
+All variables are optional:
+- `idr_jupyter_ip`: Accessible IP of the server running JupyterHub, default `ansible_docker0.ipv4.address`
+- `idr_jupyter_prefix`: The base prefix for JupyterHub, default `/`
+- `idr_jupyter_pull_latest`: Always pull the latest notebook image, default `False`
 - `idr_jupyter_notebook_image`: The Jupyter notebook docker image
+- `idr_jupyter_hub_log_level`: Log level for JupyterHub
+- `idr_jupyter_proxy_token`: Persistent token to allow connections to persist over a restart
+- `idr_jupyter_cull_options`: List of parameters to be passed to the cull idle servers service, see https://github.com/jupyterhub/jupyterhub/blob/0.9.2/examples/cull-idle/cull_idle_servers.py
+- `idr_jupyter_notebook_remove_containers`: Automatically stop and delete containers when the hub is restarted, default `True`
+- `idr_jupyter_notebook_system_uid`: UID of the notebook Docker container, default `1000`
 - `idr_jupyter_notebook_volumes`: JSON mapping of host volumes to internal notebook docker paths
-- `idr_jupyter_users`: List of users that can use Jupyterhub
-- `idr_jupyter_admins`: List of users with Jupyterhub admin privileges
-- `idr_jupyter_urlbase`: The base for URLs created by Jupyterhub
+- `idr_jupyter_users`: List of users that can use Jupyterhub, if empty all users will be allowed, default `[root]`
+- `idr_jupyter_admins`: List of users with Jupyterhub admin privileges, default `[root]`
+- `idr_jupyter_additional_config`: Dictionary of additional JupyterHub configuration options
+
+Authentication options: See [defaults/main.yml](defaults/main.yml) for predefined options. Use `idr_jupyter_additional_config` for additional options
 
 
 Example Playbook

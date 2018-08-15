@@ -43,12 +43,16 @@ def test_server(Sudo, Command):
     # Image is already pulled so should be pretty quick
     for c in xrange(12):
         sleep(5)
-        userinfo1 = apicall(Command, 'GET', token, '/users/user')
-        server = userinfo1['servers']['']
-        if not server['pending']:
+        userinfo = apicall(Command, 'GET', token, '/users/user')
+        servers = userinfo['servers']
+        if servers and not servers['']['pending']:
             break
-    assert server['ready']
+    assert servers['']['ready']
 
     apicall(Command, 'DELETE', token, '/users/user/server')
-    userinfo2 = apicall(Command, 'GET', token, '/users/user')
-    assert not userinfo2['servers']
+    for c in xrange(12):
+        sleep(5)
+        userinfo = apicall(Command, 'GET', token, '/users/user')
+        if not userinfo['servers']:
+            break
+    assert not userinfo['servers']

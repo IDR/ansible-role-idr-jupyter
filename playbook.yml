@@ -25,7 +25,6 @@
 
   roles:
   - role: ansible-role-idr-jupyter
-    idr_jupyter_ip: "{{ ansible_eth0.ipv4.address }}"
     idr_jupyter_prefix: /jupyter
     idr_jupyter_notebook_volumes: "{ '/notebooks': '/notebooks' }"
     idr_jupyter_authenticator: dummyauthenticator.DummyAuthenticator
