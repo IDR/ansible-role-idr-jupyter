@@ -19,7 +19,7 @@ Role Variables
 --------------
 
 All variables are optional:
-- `idr_jupyter_ip`: Accessible IP of the server running JupyterHub, default `ansible_docker0.ipv4.address`
+- `idr_jupyter_ip`: Accessible IP of the server running JupyterHub, default `ansible_default_ipv4.address`, if you have more than one NIC you are strongly recommended to set this, e.g. `ansible_<NIC>.ipv4.address`
 - `idr_jupyter_prefix`: The base prefix for JupyterHub, default `/`
 - `idr_jupyter_pull_latest`: Always pull the latest notebook image, default `False`
 - `idr_jupyter_notebook_image`: The Jupyter notebook docker image
