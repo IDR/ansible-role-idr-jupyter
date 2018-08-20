@@ -29,8 +29,8 @@ All variables are optional:
 - `idr_jupyter_notebook_remove_containers`: Automatically stop and delete containers when the hub is restarted, default `True`
 - `idr_jupyter_notebook_system_uid`: UID of the notebook Docker container, default `1000`
 - `idr_jupyter_notebook_volumes`: JSON mapping of host volumes to internal notebook docker paths
-- `idr_jupyter_users`: List of users that can use Jupyterhub, if empty all users will be allowed, default `[root]`
-- `idr_jupyter_admins`: List of users with Jupyterhub admin privileges, default `[root]`
+- `idr_jupyter_users`: List of users that can use JupyterHub, if empty all users will be allowed, default `[root]`
+- `idr_jupyter_admins`: List of users with JupyterHub admin privileges, default `[root]`
 - `idr_jupyter_additional_config`: Dictionary of additional JupyterHub configuration options
 
 Authentication options: See [defaults/main.yml](defaults/main.yml) for predefined options. Use `idr_jupyter_additional_config` for additional options
