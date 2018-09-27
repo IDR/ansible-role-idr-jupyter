@@ -10,58 +10,36 @@ c = get_config()
 c.JupyterHub.hub_ip = "0.0.0.0"
 #c.JupyterHub.proxy_api_ip = c.JupyterHub.hub_ip
 
-{%if idr_jupyter_docker_swarm %}
-c.JupyterHub.spawner_class = "dockerspawner.DockerServiceSpawner"
-{% else %}
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
-{% endif %}
 {% if idr_jupyter_proxy_token | default('') | length > 0 %}
 c.JupyterHub.proxy_auth_token = "{{ idr_jupyter_proxy_token }}"
 {% endif %}
 
-
-{% if idr_jupyter_docker_swarm %}
-
-######################################################################
-# DockerServiceSpawner
-# https://github.com/manics/dockerspawner/blob/master/dockerspawner/dockerservicespawner.py
-
-# Docker swarm may take a while to start a container
-c.DockerServiceSpawner.start_timeout = 180
-c.DockerServiceSpawner.debug = True
-c.DockerServiceSpawner.tls_verify = False
-#c.DockerServiceSpawner.hub_ip_connect = "{{ idr_jupyter_ip }}"
-c.DockerServiceSpawner.hub_ip_connect = "{{ idr_jupyter_service }}"
-c.DockerServiceSpawner.container_image = "{{ idr_jupyter_notebook_image }}"
-c.DockerServiceSpawner.remove_containers = {{ idr_jupyter_notebook_remove_containers | default(False) }}
-c.DockerServiceSpawner.use_internal_ip = True
-c.DockerServiceSpawner.network_name = "{{ idr_jupyter_network }}"
-{%   if idr_jupyter_notebook_volumes | default(None) %}
-c.DockerServiceSpawner.volumes = {{ idr_jupyter_notebook_volumes }}
-{%   endif %}
-c.DockerServiceSpawner.log_driver = "{{ idr_jupyter_log_driver }}"
-
-{% else %}
+c.JupyterHub.services = [{
+    'name': 'cull-idle',
+    'admin': True,
+    'command': [
+        'python',
+        '{{ idr_jupyter_basedir }}/cull_idle_servers.py',
+{% for opt in idr_jupyter_cull_options %}
+        '{{ opt }}',
+{% endfor %}
+      ]
+}]
 
 ######################################################################
 # DockerSpawner
 # https://github.com/jupyterhub/dockerspawner/blob/master/dockerspawner/dockerspawner.py
 
 c.DockerSpawner.tls_verify = False
-#c.DockerSpawner.tls_ca = "/etc/docker/ca.pem"
-#c.DockerSpawner.tls_cert = "/etc/docker/server-cert.pem"
-#c.DockerSpawner.tls_key = "/etc/docker/server-key.pem"
-#c.DockerSpawner.container_ip = "0.0.0.0"
 c.DockerSpawner.hub_ip_connect = "{{ idr_jupyter_ip }}"
 c.DockerSpawner.container_image = "{{ idr_jupyter_notebook_image }}"
-c.DockerSpawner.remove_containers = {{ idr_jupyter_notebook_remove_containers | default(False) }}
+c.DockerSpawner.remove_containers = {{ idr_jupyter_notebook_remove_containers }}
 c.DockerSpawner.use_internal_ip = True
-{%   if idr_jupyter_notebook_volumes | default(None) %}
+{%   if idr_jupyter_notebook_volumes %}
 c.DockerSpawner.volumes = {{ idr_jupyter_notebook_volumes }}
 {%   endif %}
-
-{% endif %}
-
+c.DockerSpawner.environment = { "JUPYTER_ENABLE_LAB": 1 }
 
 
 ######################################################################
@@ -73,14 +51,20 @@ c.Authenticator.admin_users = {{ idr_jupyter_admins | to_json }}
 {% if idr_jupyter_authenticator == 'system' %}
 # Use default authenticator
 {% elif idr_jupyter_authenticator == 'github' %}
-# TODO: Switch back to GitHubOAuthenticator
-c.JupyterHub.authenticator_class = "oauthenticator.GitHubOrgOAuthenticator"
+c.JupyterHub.authenticator_class = "oauthenticator.GitHubOAuthenticator"
 c.GitHubOAuthenticator.oauth_callback_url = "{{ idr_jupyter_urlbase }}{{ idr_jupyter_prefix }}/hub/oauth_callback"
 c.GitHubOAuthenticator.client_id = "{{ idr_jupyter_github_id }}"
 c.GitHubOAuthenticator.client_secret = "{{ idr_jupyter_github_secret }}"
-# https://github.com/jupyterhub/oauthenticator/pull/58 is ready
-#c.GitHubOAuthenticator.github_organization_whitelist = {{ idr_jupyter_github_orgs | to_json }}
-c.GitHubOrgOAuthenticator.github_organization_whitelist = {{ idr_jupyter_github_orgs | to_json }}
+# TODO: scopes
+c.GitHubOAuthenticator.github_organization_whitelist = {{ idr_jupyter_github_orgs | to_json }}
 {% else %}
 c.JupyterHub.authenticator_class = "{{ idr_jupyter_authenticator }}"
 {% endif %}
+c.Authenticator.scopes = {{ idr_jupyter_auth_scopes | to_json }}
+
+
+######################################################################
+# Other settings
+{% for key in idr_jupyter_additional_config %}
+c.{{ key }} = {{ idr_jupyter_additional_config[key] | to_json }}
+{% endfor %}

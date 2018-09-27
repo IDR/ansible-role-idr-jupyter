@@ -9,13 +9,13 @@ User=root
 Restart=no
 RestartSec=10
 Environment="PATH={{ idr_jupyter_basedir }}/venv/bin:/bin:/usr/bin"
-ExecStart={{ idr_jupyter_basedir }}/venv/bin/python3 \
+ExecStart={{ idr_jupyter_basedir }}/venv/bin/python3.6 \
     {{ idr_jupyter_basedir }}/venv/bin/jupyterhub \
-    --no-ssl \
     --base-url={{ idr_jupyter_prefix }} \
     -f /etc/jupyterhub/jupyterhub_config.py \
     --log-level={{ idr_jupyter_hub_log_level }}
-WorkingDirectory=/var/jupyterhub
+WorkingDirectory=/srv/jupyterhub
+SyslogIdentifier=jupyterhub
 
 [Install]
 WantedBy=multi-user.target
