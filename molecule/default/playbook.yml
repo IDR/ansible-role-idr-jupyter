@@ -1,0 +1,35 @@
+---
+- name: Converge
+  hosts: all
+
+  pre_tasks:
+
+    # Prerequisites for tests
+    - name: Install iproute
+      become: true
+      yum:
+        name: iproute
+        state: present
+
+    - name: Create notebook directory for users
+      become: true
+      file:
+        path: /notebooks
+        owner: 1000
+        state: directory
+
+  roles:
+
+    - role: ome.docker
+
+    - role: ansible-role-idr-jupyter
+      idr_jupyter_prefix: /jupyter
+      idr_jupyter_notebook_volumes: "{ '/notebooks': '/notebooks' }"
+      idr_jupyter_authenticator: dummyauthenticator.DummyAuthenticator
+      idr_jupyter_additional_config:
+        DummyAuthenticator.password: ome
+      idr_jupyter_users: [user]
+
+# Setup a port-forward to 8000 and you should be able to login to
+# http://localhost:8000/jupyter
+# with any username, password:ome

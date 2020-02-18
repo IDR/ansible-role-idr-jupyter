@@ -9,7 +9,7 @@ User=root
 Restart=no
 RestartSec=10
 Environment="PATH={{ idr_jupyter_basedir }}/venv/bin:/bin:/usr/bin"
-ExecStart={{ idr_jupyter_basedir }}/venv/bin/python3.6 \
+ExecStart={{ idr_jupyter_basedir }}/venv/bin/python3 \
     {{ idr_jupyter_basedir }}/venv/bin/jupyterhub \
     --base-url={{ idr_jupyter_prefix }} \
     -f /etc/jupyterhub/jupyterhub_config.py \

@@ -11,7 +11,7 @@ c.JupyterHub.hub_ip = "0.0.0.0"
 #c.JupyterHub.proxy_api_ip = c.JupyterHub.hub_ip
 
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
-{% if idr_jupyter_proxy_token | default('') | length > 0 %}
+{% if idr_jupyter_proxy_token | length > 0 %}
 c.JupyterHub.proxy_auth_token = "{{ idr_jupyter_proxy_token }}"
 {% endif %}
 
