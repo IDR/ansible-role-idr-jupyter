@@ -44,12 +44,12 @@
   become: yes
   pip:
     name:
-    - jupyterhub==0.9.2
+    - jupyterhub==1.1.0
     # Remember to update cull idle script below when upgrading jupyterhub
-    - dockerspawner==0.9.1
+    - dockerspawner==0.11.1
     - jupyterhub-dummyauthenticator==0.3.1
-    - jupyterhub-tmpauthenticator==0.5
-    - oauthenticator==0.8.0
+    - jupyterhub-tmpauthenticator==0.6
+    - oauthenticator==0.11.0
     state: present
     virtualenv: "{{ idr_jupyter_basedir }}/venv"
     virtualenv_command: /usr/bin/python3.6 -m venv
@@ -59,9 +59,9 @@
 - name: jupyterhub | download cull idle script
   become: yes
   get_url:
-    checksum: "sha256:87e780d986f2f4a896f90c18b82806d364a926985ff549e88208dce6a87a205a"
+    checksum: "sha256:3363f279707fd0294563da9d587acdeab2aab78907939c48340b7cc249ab15c2"
     dest: "{{ idr_jupyter_basedir }}/cull_idle_servers.py"
-    url: "https://raw.githubusercontent.com/jupyterhub/jupyterhub/0.9.2/examples/cull-idle/cull_idle_servers.py"
+    url: "https://raw.githubusercontent.com/jupyterhub/jupyterhub/1.1.0/examples/cull-idle/cull_idle_servers.py"
 
 - name: jupyterhub | pull images
   become: yes
