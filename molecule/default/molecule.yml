@@ -1,0 +1,43 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: molecule/default/requirements.yml
+
+driver:
+  name: docker
+
+lint:
+  name: yamllint
+
+platforms:
+  - name: jupyter
+    image: centos/systemd:latest
+    privileged: true
+    command: /sbin/init
+    groups:
+      - docker-hosts
+#     published_ports:
+#       - 0.0.0.0:8000:8000/tcp
+
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  inventory:
+    group_vars:
+      docker-hosts:
+        # This should allow docker-in-docker to work
+        docker_storage_driver: vfs
+        # Docker in docker bug with newer versions
+        # https://github.com/docker/for-linux/issues/219
+        docker_version: 17.09.1.ce-1.el7.centos
+
+scenario:
+  converge_sequence:
+    - converge
+
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

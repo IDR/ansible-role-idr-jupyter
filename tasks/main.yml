@@ -2,89 +2,93 @@
 # tasks file for idr-jupyter
 
 - name: jupyterhub | create jupyter directories
-  become: yes
+  become: true
   file:
     path: "{{ item }}"
     state: directory
   with_items:
-  - /etc/jupyterhub
-  - /srv/jupyterhub
+    - /etc/jupyterhub
+    - /srv/jupyterhub
 
 - name: jupyterhub | install epel repo
-  become: yes
+  become: true
   yum:
     name: epel-release
     state: present
 
 - name: jupyterhub | install system dependencies
-  become: yes
+  become: true
   yum:
     name:
-    - nodejs
-    - npm
-    # Required by ansible docker_image
-    - python-docker-py
-    - python36
+      - nodejs
+      - npm
+      # Required by ansible docker_image
+      - python-docker-py
+      # Required by ansible pip module
+      - python-setuptools
+      - python36
     state: present
 
 - name: jupyterhub | install node packages
-  become: yes
+  become: true
   npm:
-    global: yes
+    global: true
     name: configurable-http-proxy
     state: present
 
 - name: jupyterhub | create base directory
-  become: yes
+  become: true
   file:
     path: "{{ idr_jupyter_basedir }}"
     state: directory
 
 - name: jupyterhub | install python3 packages in virtualenv
-  become: yes
+  become: true
   pip:
     name:
-    - jupyterhub==0.9.2
-    # Remember to update cull idle script below when upgrading jupyterhub
-    - dockerspawner==0.9.1
-    - jupyterhub-dummyauthenticator==0.3.1
-    - jupyterhub-tmpauthenticator==0.5
-    - oauthenticator==0.8.0
+      - jupyterhub==1.1.0
+      # Remember to update cull idle script below when upgrading jupyterhub
+      - dockerspawner==0.11.1
+      - jupyterhub-dummyauthenticator==0.3.1
+      - jupyterhub-tmpauthenticator==0.6
+      - oauthenticator==0.11.0
     state: present
     virtualenv: "{{ idr_jupyter_basedir }}/venv"
-    virtualenv_command: /usr/bin/python3.6 -m venv
+    virtualenv_command: /usr/bin/python3 -mvenv
   notify:
-  - restart jupyterhub
+    - restart jupyterhub
 
 - name: jupyterhub | download cull idle script
-  become: yes
+  become: true
   get_url:
-    checksum: "sha256:87e780d986f2f4a896f90c18b82806d364a926985ff549e88208dce6a87a205a"
+    checksum: >-
+      sha256:3363f279707fd0294563da9d587acdeab2aab78907939c48340b7cc249ab15c2
     dest: "{{ idr_jupyter_basedir }}/cull_idle_servers.py"
-    url: "https://raw.githubusercontent.com/jupyterhub/jupyterhub/0.9.2/examples/cull-idle/cull_idle_servers.py"
+    url: >-
+      https://raw.githubusercontent.com/jupyterhub/jupyterhub/1.1.0/examples/cull-idle/cull_idle_servers.py
 
 - name: jupyterhub | pull images
-  become: yes
+  become: true
   docker_image:
     name: "{{ item }}"
     state: "present"
     force: "{{ idr_jupyter_pull_latest }}"
   with_items:
-  - "{{ idr_jupyter_notebook_image }}"
+    - "{{ idr_jupyter_notebook_image }}"
   notify:
-  - restart jupyterhub
+    - restart jupyterhub
 
 - name: jupyterhub | create systemd service
-  become: yes
+  become: true
   template:
     src: systemd-system-jupyterhub-service.j2
     dest: /etc/systemd/system/jupyterhub.service
   notify:
-  - restart jupyterhub
+    - restart jupyterhub
 
 # This may contain sensitive credentials
 - name: jupyterhub | copy jupyter configuration file
-  become: yes
+  become: true
   template:
     src: jupyterhub_config-py.j2
     dest: /etc/jupyterhub/jupyterhub_config.py
@@ -92,12 +96,12 @@
     group: root
     mode: "0600"
   notify:
-  - restart jupyterhub
+    - restart jupyterhub
 
 - name: jupyterhub | enable jupyterhub
-  become: yes
+  become: true
   systemd:
-    daemon_reload: yes
-    enabled: yes
+    daemon_reload: true
+    enabled: true
     name: jupyterhub.service
     state: started
