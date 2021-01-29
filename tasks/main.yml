@@ -6,6 +6,7 @@
   file:
     path: "{{ item }}"
     state: directory
+    mode: 0755
   with_items:
     - /etc/jupyterhub
     - /srv/jupyterhub
@@ -41,6 +42,7 @@
   file:
     path: "{{ idr_jupyter_basedir }}"
     state: directory
+    mode: 0755
 
 - name: jupyterhub | install python3 packages in virtualenv
   become: true
@@ -83,6 +85,7 @@
   template:
     src: systemd-system-jupyterhub-service.j2
     dest: /etc/systemd/system/jupyterhub.service
+    mode: 0644
   notify:
     - restart jupyterhub
 

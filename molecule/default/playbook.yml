@@ -17,6 +17,7 @@
         path: /notebooks
         owner: 1000
         state: directory
+        mode: 0755
 
   roles:
 
