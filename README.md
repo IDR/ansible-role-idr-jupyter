@@ -39,7 +39,7 @@ Authentication options: See [defaults/main.yml](defaults/main.yml) for predefine
 Example Playbook
 ----------------
 
-See [playbook.yml](playbook.yml).
+See [playbook.yml](./molecule/default/playbook.yml).
 Once deployed you should be able to login to JupyterHub at http://localhost:8000, username: `user`, password `ome`.
 
 
