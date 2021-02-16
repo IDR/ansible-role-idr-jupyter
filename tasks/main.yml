@@ -48,6 +48,8 @@
   become: true
   pip:
     name:
+      # Required for cryptography 3.4
+      - pip>=21.0.1
       - jupyterhub==1.1.0
       # Remember to update cull idle script below when upgrading jupyterhub
       - dockerspawner==0.11.1
