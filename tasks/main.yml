@@ -44,10 +44,22 @@
     state: directory
     mode: 0755
 
+- name: jupyterhub | setup python3 virtualenv
+  become: true
+  pip:
+    name:
+      # Required for cryptography 3.4
+      - pip>=21.0.1
+    state: present
+    virtualenv: "{{ idr_jupyter_basedir }}/venv"
+    virtualenv_command: /usr/bin/python3 -mvenv
+
 - name: jupyterhub | install python3 packages in virtualenv
   become: true
   pip:
     name:
+      # Required for cryptography 3.4
+      - pip>=21.0.1
       - jupyterhub==1.1.0
       # Remember to update cull idle script below when upgrading jupyterhub
       - dockerspawner==0.11.1
@@ -56,7 +68,6 @@
       - oauthenticator==0.11.0
     state: present
     virtualenv: "{{ idr_jupyter_basedir }}/venv"
-    virtualenv_command: /usr/bin/python3 -mvenv
   notify:
     - restart jupyterhub
 
